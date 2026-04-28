@@ -11,11 +11,25 @@ use Livewire\Component;
 #[Layout('layouts.app')]
 class FormBuilder extends Component
 {
+    public ?Form $form = null;
+
     public string $name = '';
 
     public ?string $description = null;
 
     public bool $is_active = true;
+
+    public function mount(?Form $form = null): void
+    {
+        if (! $form?->exists) {
+            return;
+        }
+
+        $this->form = $form;
+        $this->name = $form->name;
+        $this->description = $form->description;
+        $this->is_active = $form->is_active;
+    }
 
     public function save(): void
     {
@@ -25,12 +39,17 @@ class FormBuilder extends Component
             'is_active' => ['boolean'],
         ]);
 
-        Form::query()->create([
-            ...$validated,
-            'created_by' => Auth::id(),
-        ]);
+        if ($this->form) {
+            $this->form->update($validated);
+            session()->flash('success', 'Form updated successfully.');
+        } else {
+            Form::query()->create([
+                ...$validated,
+                'created_by' => Auth::id(),
+            ]);
 
-        session()->flash('success', 'Form created successfully.');
+            session()->flash('success', 'Form created successfully.');
+        }
 
         $this->redirectRoute('admin.forms.index', navigate: true);
     }

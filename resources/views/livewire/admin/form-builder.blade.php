@@ -1,7 +1,7 @@
 <div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Create Form') }}
+            {{ $form ? __('Edit Form') : __('Create Form') }}
         </h2>
     </x-slot>
 
@@ -52,7 +52,7 @@
                         </a>
 
                         <x-primary-button>
-                            {{ __('Save') }}
+                            {{ $form ? __('Update') : __('Save') }}
                         </x-primary-button>
                     </div>
                 </form>

@@ -19,6 +19,7 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
         Route::get('forms/create', FormBuilder::class)->name('forms.create');
+        Route::get('forms/{form}/edit', FormBuilder::class)->name('forms.edit');
         Route::get('forms', ManageForms::class)->name('forms.index');
     });
 

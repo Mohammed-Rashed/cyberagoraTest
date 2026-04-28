@@ -39,6 +39,7 @@
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fields</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Workflow Steps</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
+                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
@@ -58,6 +59,15 @@
                                             <td class="px-4 py-3 text-sm text-gray-700">{{ $form->fields_count }}</td>
                                             <td class="px-4 py-3 text-sm text-gray-700">{{ $form->workflow_steps_count }}</td>
                                             <td class="px-4 py-3 text-sm text-gray-700">{{ $form->created_at?->format('Y-m-d') }}</td>
+                                            <td class="px-4 py-3 text-right">
+                                                <a
+                                                    href="{{ route('admin.forms.edit', $form) }}"
+                                                    wire:navigate
+                                                    class="text-sm font-medium text-indigo-600 hover:text-indigo-900"
+                                                >
+                                                    {{ __('Edit') }}
+                                                </a>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
