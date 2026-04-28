@@ -1,58 +1,158 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Dynamic Approval Workflow System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A simple Laravel web application for managing dynamic approval workflows.
 
-## About Laravel
+The system allows admin users to create dynamic forms with different fields, define approval workflow steps, allow normal users to submit approval requests, and allow approvers to approve or reject pending requests.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Task Scope
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Admin Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Create dynamic forms.
+- Add different input fields for each form.
+- Define approval workflow steps for each form.
+- Assign approvers with approval order.
 
-## Learning Laravel
+### User Features
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- View available active forms.
+- Fill and submit approval requests.
+- View submitted requests history.
+- Track request status.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Approver Features
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- View pending approval requests.
+- View past approvals.
+- Approve or reject pending requests.
+- Add optional comments.
 
-## Agentic Development
+## Tech Stack
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+- Laravel
+- Laravel Breeze
+- Livewire
+- Blade
+- MySQL
+- Service Classes
+- Form Requests
+- PHP Enums
+
+## Implementation Notes
+
+- Simple role-based access using a `role` column in the `users` table.
+- No database enum columns were used.
+- Statuses, roles, field types, and actions are stored as tiny integers.
+- PHP Enums are used in the code for readability.
+- The workflow is sequential.
+- Each approval step has one approver.
+
+## Roles
+
+| Role | Value |
+|---|---:|
+| Admin | 1 |
+| User | 2 |
+| Approver | 3 |
+
+## Supported Field Types
+
+| Field Type | Value |
+|---|---:|
+| Text | 1 |
+| Number | 2 |
+| Date | 3 |
+| Textarea | 4 |
+| Select | 5 |
+
+## Approval Request Statuses
+
+| Status | Value |
+|---|------:|
+| Pending |     1 |
+| Approved |     2 |
+| Rejected |     3 |
+| Withdrawn |     4 |
+
+## Approval Actions
+
+| Action     | Value |
+|------------|------:|
+| Approved   |     1 |
+| Rejected   |     2 |
+
+## Database Tables
+
+Main tables added:
+
+- `forms`
+- `form_fields`
+- `approval_workflow_steps`
+- `approval_requests`
+- `approval_request_values`
+- `approval_actions`
+- `approval_request_steps`
+
+## Workflow Logic
+
+1. Admin creates a form.
+2. Admin adds dynamic fields.
+3. Admin defines approval workflow steps.
+4. User submits a request using the form.
+5. Request starts as pending.
+6. The current approver can approve or reject.
+7. If approved, the request moves to the next step.
+8. If the last step is approved, the request becomes approved.
+9. If rejected at any step, the request becomes rejected.
+10. Users can withdraw their approval requests before the request is fully approved.
+11. 
+## Setup Instructions
+
+### 1. Clone the project
 
 ```bash
-composer require laravel/boost --dev
+git clone https://github.com/Mohammed-Rashed/cyberagoraTest.git
+cd cyberagoraTest
 
-php artisan boost:install
-```
+### 1. Install PHP dependencies
+composer install
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2. Install frontend dependencies
+npm install
 
-## Contributing
+### 3. Create environment file
+cp .env.example .env
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+On Windows:
+copy .env.example .env
 
-## Code of Conduct
+### 4. Generate application key
+php artisan key:generate
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 5. Configure database
 
-## Security Vulnerabilities
+Update .env file:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=cyberagora_test
+DB_USERNAME=root
+DB_PASSWORD=
 
-## License
+### 6. Run migrations
+php artisan migrate
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Or reset the database:
+php artisan migrate:fresh
+
+### 7. Run seeders
+php artisan db:seed
+
+---
+
+## Database Dump
+
+A database dump is attached with the project for quick testing or download from this link 
+[https://drive.google.com/file/d/10WJmsgQvZapTjzK79hKJthxeORQEeFHB/view?usp=sharing]
+
