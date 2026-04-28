@@ -34,7 +34,7 @@
                             <div class="mt-1 text-sm text-gray-900">
                                 @php
                                     $currentStep = $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Pending
-                                        ? $approvalRequest->currentWorkflowStep()
+                                        ? $approvalRequest->currentRequestStep()
                                         : null;
                                 @endphp
 
@@ -91,9 +91,9 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
-                                @foreach ($approvalRequest->form?->workflowSteps ?? [] as $step)
+                                @foreach ($approvalRequest->requestSteps as $step)
                                     @php
-                                        $action = $approvalRequest->actions->firstWhere('approval_workflow_step_id', $step->id);
+                                        $action = $approvalRequest->actions->firstWhere('approval_workflow_step_id', $step->approval_workflow_step_id);
                                         $isCurrent = $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Pending
                                             && $approvalRequest->current_step_order === $step->step_order;
                                     @endphp

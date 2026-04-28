@@ -18,7 +18,8 @@ class ApprovalRequestDetails extends Component
         abort_unless($approvalRequest->requested_by === Auth::id(), 403);
 
         $this->approvalRequest = $approvalRequest->load([
-            'form.workflowSteps.approver',
+            'form',
+            'requestSteps.approver',
             'values.formField',
             'actions.approver',
             'actions.workflowStep',

@@ -21,10 +21,10 @@ class PendingApprovals extends Component
             'approvalRequests' => ApprovalRequest::query()
                 ->with(['form', 'requester'])
                 ->where('status', ApprovalRequestStatus::Pending->value)
-                ->whereHas('form.workflowSteps', function ($query): void {
+                ->whereHas('requestSteps', function ($query): void {
                     $query
                         ->where('approver_id', Auth::id())
-                        ->whereColumn('approval_workflow_steps.step_order', 'approval_requests.current_step_order');
+                        ->whereColumn('approval_request_steps.step_order', 'approval_requests.current_step_order');
                 })
                 ->latest()
                 ->paginate(10),

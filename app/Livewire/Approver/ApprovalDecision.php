@@ -59,8 +59,7 @@ class ApprovalDecision extends Component
     private function canActOnRequest(): bool
     {
         return $this->approvalRequest
-            ->form
-            ->workflowSteps()
+            ->requestSteps()
             ->where('step_order', $this->approvalRequest->current_step_order)
             ->where('approver_id', Auth::id())
             ->exists();

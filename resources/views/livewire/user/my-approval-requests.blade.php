@@ -46,7 +46,7 @@
                                             <td class="px-4 py-3 text-sm text-gray-700">
                                                 @php
                                                     $currentStep = $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Pending
-                                                        ? $approvalRequest->currentWorkflowStep()
+                                                        ? $approvalRequest->currentRequestStep()
                                                         : null;
                                                 @endphp
 

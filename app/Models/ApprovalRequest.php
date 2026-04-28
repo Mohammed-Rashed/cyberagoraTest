@@ -45,10 +45,22 @@ class ApprovalRequest extends Model
         return $this->hasMany(ApprovalAction::class);
     }
 
+    public function requestSteps(): HasMany
+    {
+        return $this->hasMany(ApprovalRequestStep::class)->orderBy('step_order');
+    }
+
     public function currentWorkflowStep(): ?ApprovalWorkflowStep
     {
         return $this->form
             ?->workflowSteps()
+            ->where('step_order', $this->current_step_order)
+            ->first();
+    }
+
+    public function currentRequestStep(): ?ApprovalRequestStep
+    {
+        return $this->requestSteps()
             ->where('step_order', $this->current_step_order)
             ->first();
     }

@@ -39,13 +39,23 @@ class ApprovalRequestService
         }
 
         return DB::transaction(function () use ($form, $user, $values): ApprovalRequest {
+            $workflowSteps = $form->workflowSteps()->get();
+
             $approvalRequest = ApprovalRequest::query()->create([
                 'form_id' => $form->id,
                 'requested_by' => $user->id,
                 'status' => ApprovalRequestStatus::Pending,
-                'current_step_order' => $form->workflowSteps()->min('step_order') ?? 1,
+                'current_step_order' => $workflowSteps->min('step_order') ?? 1,
                 'submitted_at' => now(),
             ]);
+
+            foreach ($workflowSteps as $workflowStep) {
+                $approvalRequest->requestSteps()->create([
+                    'approval_workflow_step_id' => $workflowStep->id,
+                    'approver_id' => $workflowStep->approver_id,
+                    'step_order' => $workflowStep->step_order,
+                ]);
+            }
 
             foreach ($form->fields as $field) {
                 $approvalRequest->values()->create([
@@ -76,7 +86,7 @@ class ApprovalRequestService
     ): ApprovalRequest {
         return DB::transaction(function () use ($approvalRequest, $approver, $action, $comment): ApprovalRequest {
             $approvalRequest = ApprovalRequest::query()
-                ->with('form.workflowSteps')
+                ->with('requestSteps')
                 ->lockForUpdate()
                 ->findOrFail($approvalRequest->id);
 
@@ -86,8 +96,8 @@ class ApprovalRequestService
                 ]);
             }
 
-            $currentStep = $approvalRequest->form
-                ->workflowSteps()
+            $currentStep = $approvalRequest
+                ->requestSteps()
                 ->where('step_order', $approvalRequest->current_step_order)
                 ->where('approver_id', $approver->id)
                 ->first();
@@ -99,7 +109,7 @@ class ApprovalRequestService
             }
 
             $approvalRequest->actions()->create([
-                'approval_workflow_step_id' => $currentStep->id,
+                'approval_workflow_step_id' => $currentStep->approval_workflow_step_id,
                 'approver_id' => $approver->id,
                 'action' => $action,
                 'comment' => $comment,
@@ -114,8 +124,8 @@ class ApprovalRequestService
                 return $approvalRequest->refresh();
             }
 
-            $nextStepOrder = $approvalRequest->form
-                ->workflowSteps()
+            $nextStepOrder = $approvalRequest
+                ->requestSteps()
                 ->where('step_order', '>', $approvalRequest->current_step_order)
                 ->min('step_order');
 
