@@ -25,6 +25,12 @@
                         </div>
                     @endif
 
+                    @if (session('error'))
+                        <div class="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-800">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead>
@@ -32,7 +38,9 @@
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
+                                    <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
@@ -41,7 +49,26 @@
                                         <td class="px-4 py-3 font-medium text-gray-900">{{ $user->name }}</td>
                                         <td class="px-4 py-3 text-sm text-gray-700">{{ $user->email }}</td>
                                         <td class="px-4 py-3 text-sm text-gray-700">{{ $user->role->name }}</td>
+                                        <td class="px-4 py-3 text-sm">
+                                            <span class="{{ $user->is_active ? 'text-green-700' : 'text-red-700' }}">
+                                                {{ $user->is_active ? __('Active') : __('Inactive') }}
+                                            </span>
+                                        </td>
                                         <td class="px-4 py-3 text-sm text-gray-700">{{ $user->created_at?->format('Y-m-d') }}</td>
+                                        <td class="px-4 py-3 text-right">
+                                            @if ($user->role !== \App\Enums\UserRole::Admin)
+                                                <button
+                                                    type="button"
+                                                    wire:click="toggleStatus({{ $user->id }})"
+                                                    wire:confirm="{{ $user->is_active ? __('Deactivate this account?') : __('Activate this account?') }}"
+                                                    class="text-sm font-medium {{ $user->is_active ? 'text-red-600 hover:text-red-800' : 'text-green-700 hover:text-green-900' }}"
+                                                >
+                                                    {{ $user->is_active ? __('Deactivate') : __('Activate') }}
+                                                </button>
+                                            @else
+                                                <span class="text-sm text-gray-400">{{ __('Protected') }}</span>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -103,6 +103,7 @@ class WorkflowBuilder extends Component
         return view('livewire.admin.workflow-builder', [
             'approvers' => User::query()
                 ->where('role', UserRole::Approver->value)
+                ->where('is_active', true)
                 ->orderBy('name')
                 ->get(),
         ]);
