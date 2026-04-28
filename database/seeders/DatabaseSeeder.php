@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Admin User',
                 'password' => Hash::make('password'),
                 'role' => UserRole::Admin,
+                'email_verified_at' => now(),
             ],
         );
 
@@ -36,6 +37,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Normal User',
                 'password' => Hash::make('password'),
                 'role' => UserRole::User,
+                'email_verified_at' => now(),
             ],
         );
 
@@ -45,6 +47,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'First Approver',
                 'password' => Hash::make('password'),
                 'role' => UserRole::Approver,
+                'email_verified_at' => now(),
             ],
         );
 
@@ -54,6 +57,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Second Approver',
                 'password' => Hash::make('password'),
                 'role' => UserRole::Approver,
+                'email_verified_at' => now(),
             ],
         );
 
