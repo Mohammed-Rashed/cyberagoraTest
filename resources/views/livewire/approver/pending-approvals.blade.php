@@ -9,6 +9,12 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
+                    @if (session('success'))
+                        <div class="mb-4 rounded-md bg-green-50 p-4 text-sm text-green-800">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
                     @if ($approvalRequests->isEmpty())
                         <p class="text-sm text-gray-600">
                             {{ __('There are no pending approvals assigned to you.') }}
@@ -43,9 +49,13 @@
                                                 {{ $approvalRequest->submitted_at?->format('Y-m-d H:i') }}
                                             </td>
                                             <td class="px-4 py-3 text-right">
-                                                <span class="text-sm text-gray-500">
-                                                    {{ __('Decision page coming next') }}
-                                                </span>
+                                                <a
+                                                    href="{{ route('approvals.show', $approvalRequest) }}"
+                                                    wire:navigate
+                                                    class="text-sm font-medium text-indigo-600 hover:text-indigo-900"
+                                                >
+                                                    {{ __('Review') }}
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach
