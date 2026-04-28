@@ -105,10 +105,9 @@ Main tables added:
 8. If the last step is approved, the request becomes approved.
 9. If rejected at any step, the request becomes rejected.
 10. Users can withdraw their approval requests before the request is fully approved.
-11. 
+
 ## Setup Instructions
 
-### 1. Clone the project
 
 ```bash
 git clone https://github.com/Mohammed-Rashed/cyberagoraTest.git
