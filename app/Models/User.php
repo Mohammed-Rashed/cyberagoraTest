@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'role'])]
+#[Fillable(['name', 'email', 'password', 'role', 'is_active', 'email_verified_at'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -30,6 +30,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'role' => UserRole::class,
+            'is_active' => 'boolean',
         ];
     }
 
@@ -61,5 +62,10 @@ class User extends Authenticatable
     public function isApprover(): bool
     {
         return $this->role === UserRole::Approver;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->is_active;
     }
 }

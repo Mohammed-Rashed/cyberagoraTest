@@ -16,20 +16,20 @@ use Illuminate\Support\Facades\Route;
 Route::view('/', 'welcome');
 
 Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'active'])
     ->name('dashboard');
 
 Route::view('profile', 'profile')
-    ->middleware(['auth'])
+    ->middleware(['auth', 'active'])
     ->name('profile');
 
-Route::middleware(['auth', 'role:user'])->group(function () {
+Route::middleware(['auth', 'verified', 'active', 'role:user'])->group(function () {
     Route::get('forms', AvailableForms::class)->name('forms.index');
     Route::get('forms/{form}/submit', SubmitApprovalRequest::class)->name('forms.submit');
     Route::get('my-requests', MyApprovalRequests::class)->name('my-requests.index');
 });
 
-Route::middleware(['auth', 'role:admin'])
+Route::middleware(['auth', 'verified', 'active', 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
@@ -41,7 +41,7 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('forms', ManageForms::class)->name('forms.index');
     });
 
-Route::middleware(['auth', 'role:approver'])
+Route::middleware(['auth', 'verified', 'active', 'role:approver'])
     ->prefix('approvals')
     ->name('approvals.')
     ->group(function () {

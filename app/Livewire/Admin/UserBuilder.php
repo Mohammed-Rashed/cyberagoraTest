@@ -35,6 +35,7 @@ class UserBuilder extends Component
         User::query()->create([
             ...$validated,
             'email_verified_at' => now(),
+            'is_active' => true,
         ]);
 
         session()->flash('success', 'User created successfully.');
