@@ -44,6 +44,10 @@ new class extends Component
                         <x-nav-link :href="route('forms.index')" :active="request()->routeIs('forms.*')" wire:navigate>
                             {{ __('Forms') }}
                         </x-nav-link>
+
+                        <x-nav-link :href="route('my-requests.index')" :active="request()->routeIs('my-requests.*')" wire:navigate>
+                            {{ __('My Requests') }}
+                        </x-nav-link>
                     @endif
                 </div>
             </div>
@@ -106,6 +110,10 @@ new class extends Component
             @if (auth()->user()->role === \App\Enums\UserRole::User)
                 <x-responsive-nav-link :href="route('forms.index')" :active="request()->routeIs('forms.*')" wire:navigate>
                     {{ __('Forms') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('my-requests.index')" :active="request()->routeIs('my-requests.*')" wire:navigate>
+                    {{ __('My Requests') }}
                 </x-responsive-nav-link>
             @endif
         </div>
