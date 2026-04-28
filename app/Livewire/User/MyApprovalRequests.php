@@ -18,7 +18,7 @@ class MyApprovalRequests extends Component
     {
         return view('livewire.user.my-approval-requests', [
             'approvalRequests' => ApprovalRequest::query()
-                ->with(['form'])
+                ->with(['form.workflowSteps.approver'])
                 ->where('requested_by', Auth::id())
                 ->latest()
                 ->paginate(10),

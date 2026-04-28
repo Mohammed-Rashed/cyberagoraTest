@@ -30,9 +30,22 @@
                         </div>
 
                         <div>
-                            <div class="text-sm font-medium text-gray-500">{{ __('Current Step') }}</div>
+                            <div class="text-sm font-medium text-gray-500">{{ __('Current Approver') }}</div>
                             <div class="mt-1 text-sm text-gray-900">
-                                {{ $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Pending ? $approvalRequest->current_step_order : '-' }}
+                                @php
+                                    $currentStep = $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Pending
+                                        ? $approvalRequest->currentWorkflowStep()
+                                        : null;
+                                @endphp
+
+                                @if ($currentStep)
+                                    {{ $currentStep->approver?->name ?? __('Deleted approver') }}
+                                    @if ($currentStep->approver?->email)
+                                        <div class="text-xs text-gray-500">{{ $currentStep->approver->email }}</div>
+                                    @endif
+                                @else
+                                    -
+                                @endif
                             </div>
                         </div>
 
@@ -59,6 +72,64 @@
                                 </div>
                             </div>
                         @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6">
+                    <h3 class="text-lg font-medium text-gray-900">{{ __('Workflow Progress') }}</h3>
+
+                    <div class="mt-4 overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Step</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Approver</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Comment</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                @foreach ($approvalRequest->form?->workflowSteps ?? [] as $step)
+                                    @php
+                                        $action = $approvalRequest->actions->firstWhere('approval_workflow_step_id', $step->id);
+                                        $isCurrent = $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Pending
+                                            && $approvalRequest->current_step_order === $step->step_order;
+                                    @endphp
+
+                                    <tr>
+                                        <td class="px-4 py-3 text-sm text-gray-700">
+                                            {{ $step->step_order }}
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-gray-700">
+                                            {{ $step->approver?->name ?? __('Deleted approver') }}
+                                            @if ($step->approver?->email)
+                                                <div class="text-xs text-gray-500">{{ $step->approver->email }}</div>
+                                            @endif
+                                        </td>
+                                        <td class="px-4 py-3 text-sm">
+                                            @if ($action)
+                                                <span @class([
+                                                    'font-medium',
+                                                    'text-green-700' => $action->action === \App\Enums\ApprovalActionType::Approved,
+                                                    'text-red-700' => $action->action === \App\Enums\ApprovalActionType::Rejected,
+                                                ])>
+                                                    {{ $action->action->name }}
+                                                </span>
+                                            @elseif ($isCurrent)
+                                                <span class="font-medium text-yellow-700">{{ __('Current') }}</span>
+                                            @else
+                                                <span class="text-gray-500">{{ __('Waiting') }}</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-gray-700">
+                                            {{ $action && filled($action->comment) ? $action->comment : '-' }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

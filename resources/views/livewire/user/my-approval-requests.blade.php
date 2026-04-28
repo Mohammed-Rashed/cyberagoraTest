@@ -20,7 +20,7 @@
                                     <tr>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Form</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Current Step</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Current Approver</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Submitted</th>
                                         <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Action</th>
                                     </tr>
@@ -44,7 +44,17 @@
                                                 </span>
                                             </td>
                                             <td class="px-4 py-3 text-sm text-gray-700">
-                                                {{ $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Pending ? $approvalRequest->current_step_order : '-' }}
+                                                @php
+                                                    $currentStep = $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Pending
+                                                        ? $approvalRequest->currentWorkflowStep()
+                                                        : null;
+                                                @endphp
+
+                                                @if ($currentStep)
+                                                    {{ $currentStep->approver?->name ?? __('Deleted approver') }}
+                                                @else
+                                                    -
+                                                @endif
                                             </td>
                                             <td class="px-4 py-3 text-sm text-gray-700">
                                                 {{ $approvalRequest->submitted_at?->format('Y-m-d H:i') }}
