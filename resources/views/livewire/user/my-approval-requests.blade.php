@@ -9,6 +9,12 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
+                    @if (session('success'))
+                        <div class="mb-4 rounded-md bg-green-50 p-4 text-sm text-green-800">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
                     @if ($approvalRequests->isEmpty())
                         <p class="text-sm text-gray-600">
                             {{ __('You have not submitted any approval requests yet.') }}
@@ -68,6 +74,17 @@
                                                 >
                                                     {{ __('View') }}
                                                 </a>
+
+                                                @if ($approvalRequest->status === \App\Enums\ApprovalRequestStatus::Pending)
+                                                    <button
+                                                        type="button"
+                                                        wire:click="withdraw({{ $approvalRequest->id }})"
+                                                        wire:confirm="Withdraw this request?"
+                                                        class="ms-3 text-sm font-medium text-red-600 hover:text-red-800"
+                                                    >
+                                                        {{ __('Withdraw') }}
+                                                    </button>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

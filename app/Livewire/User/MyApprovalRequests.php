@@ -3,6 +3,7 @@
 namespace App\Livewire\User;
 
 use App\Models\ApprovalRequest;
+use App\Services\ApprovalRequestService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
@@ -13,6 +14,17 @@ use Livewire\WithPagination;
 class MyApprovalRequests extends Component
 {
     use WithPagination;
+
+    public function withdraw(int $approvalRequestId, ApprovalRequestService $approvalRequestService): void
+    {
+        $approvalRequest = ApprovalRequest::query()
+            ->where('requested_by', Auth::id())
+            ->findOrFail($approvalRequestId);
+
+        $approvalRequestService->withdraw($approvalRequest, Auth::user());
+
+        session()->flash('success', 'Approval request withdrawn successfully.');
+    }
 
     public function render(): View
     {
