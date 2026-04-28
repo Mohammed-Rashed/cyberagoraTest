@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Admin\FormBuilder;
 use App\Livewire\Admin\ManageForms;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,7 @@ Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+        Route::get('forms/create', FormBuilder::class)->name('forms.create');
         Route::get('forms', ManageForms::class)->name('forms.index');
     });
 

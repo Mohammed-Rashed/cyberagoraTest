@@ -6,7 +6,8 @@
             </h2>
 
             <a
-                href="#"
+                href="{{ route('admin.forms.create') }}"
+                wire:navigate
                 class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700"
             >
                 {{ __('Create Form') }}
@@ -18,6 +19,12 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
+                    @if (session('success'))
+                        <div class="mb-4 rounded-md bg-green-50 p-4 text-sm text-green-800">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
                     @if ($forms->isEmpty())
                         <p class="text-sm text-gray-600">
                             {{ __('No forms created yet.') }}
