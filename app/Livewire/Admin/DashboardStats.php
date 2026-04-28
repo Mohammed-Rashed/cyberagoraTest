@@ -38,6 +38,9 @@ class DashboardStats extends Component
                 'rejectedRequests' => ApprovalRequest::query()
                     ->where('status', ApprovalRequestStatus::Rejected->value)
                     ->count(),
+                'withdrawnRequests' => ApprovalRequest::query()
+                    ->where('status', ApprovalRequestStatus::Withdrawn->value)
+                    ->count(),
                 'approvalActions' => ApprovalAction::query()->count(),
             ],
         ]);

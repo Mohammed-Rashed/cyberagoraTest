@@ -9,6 +9,18 @@
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
+                    @if (session('success'))
+                        <div class="mb-4 rounded-md bg-green-50 p-4 text-sm text-green-800">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @error('withdraw')
+                        <div class="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-800">
+                            {{ $message }}
+                        </div>
+                    @enderror
+
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div>
                             <div class="text-sm font-medium text-gray-500">{{ __('Form') }}</div>
@@ -23,6 +35,7 @@
                                     'text-yellow-700' => $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Pending,
                                     'text-green-700' => $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Approved,
                                     'text-red-700' => $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Rejected,
+                                    'text-gray-700' => $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Withdrawn,
                                 ])>
                                     {{ $approvalRequest->status->name }}
                                 </span>
@@ -96,6 +109,8 @@
                                         $action = $approvalRequest->actions->firstWhere('approval_workflow_step_id', $step->approval_workflow_step_id);
                                         $isCurrent = $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Pending
                                             && $approvalRequest->current_step_order === $step->step_order;
+                                        $isWithdrawnStep = $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Withdrawn
+                                            && $approvalRequest->current_step_order === $step->step_order;
                                     @endphp
 
                                     <tr>
@@ -119,6 +134,8 @@
                                                 </span>
                                             @elseif ($isCurrent)
                                                 <span class="font-medium text-yellow-700">{{ __('Current') }}</span>
+                                            @elseif ($isWithdrawnStep)
+                                                <span class="font-medium text-gray-700">{{ __('Withdrawn') }}</span>
                                             @else
                                                 <span class="text-gray-500">{{ __('Waiting') }}</span>
                                             @endif
@@ -188,6 +205,17 @@
             </div>
 
             <div class="flex justify-end">
+                @if ($approvalRequest->status === \App\Enums\ApprovalRequestStatus::Pending)
+                    <button
+                        type="button"
+                        wire:click="withdraw"
+                        wire:confirm="Withdraw this request?"
+                        class="me-4 inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500"
+                    >
+                        {{ __('Withdraw Request') }}
+                    </button>
+                @endif
+
                 <a
                     href="{{ route('my-requests.index') }}"
                     wire:navigate

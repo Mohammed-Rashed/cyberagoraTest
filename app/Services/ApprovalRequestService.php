@@ -78,6 +78,33 @@ class ApprovalRequestService
         return $this->act($approvalRequest, $approver, ApprovalActionType::Rejected, $comment);
     }
 
+    public function withdraw(ApprovalRequest $approvalRequest, User $user): ApprovalRequest
+    {
+        return DB::transaction(function () use ($approvalRequest, $user): ApprovalRequest {
+            $approvalRequest = ApprovalRequest::query()
+                ->lockForUpdate()
+                ->findOrFail($approvalRequest->id);
+
+            if ($approvalRequest->requested_by !== $user->id) {
+                throw ValidationException::withMessages([
+                    'withdraw' => 'You can only withdraw your own requests.',
+                ]);
+            }
+
+            if ($approvalRequest->status !== ApprovalRequestStatus::Pending) {
+                throw ValidationException::withMessages([
+                    'withdraw' => 'Only pending requests can be withdrawn.',
+                ]);
+            }
+
+            $approvalRequest->update([
+                'status' => ApprovalRequestStatus::Withdrawn,
+            ]);
+
+            return $approvalRequest->refresh();
+        });
+    }
+
     private function act(
         ApprovalRequest $approvalRequest,
         User $approver,

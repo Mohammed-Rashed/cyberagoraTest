@@ -39,6 +39,7 @@
                                                     'text-yellow-700' => $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Pending,
                                                     'text-green-700' => $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Approved,
                                                     'text-red-700' => $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Rejected,
+                                                    'text-gray-700' => $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Withdrawn,
                                                 ])>
                                                     {{ $approvalRequest->status->name }}
                                                 </span>
