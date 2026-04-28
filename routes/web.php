@@ -4,6 +4,7 @@ use App\Livewire\Admin\FormBuilder;
 use App\Livewire\Admin\ManageForms;
 use App\Livewire\Admin\WorkflowBuilder;
 use App\Livewire\Approver\ApprovalDecision;
+use App\Livewire\Approver\ApprovalHistory;
 use App\Livewire\Approver\PendingApprovals;
 use App\Livewire\User\AvailableForms;
 use App\Livewire\User\MyApprovalRequests;
@@ -41,6 +42,7 @@ Route::middleware(['auth', 'role:approver'])
     ->name('approvals.')
     ->group(function () {
         Route::get('pending', PendingApprovals::class)->name('pending');
+        Route::get('history', ApprovalHistory::class)->name('history');
         Route::get('{approvalRequest}', ApprovalDecision::class)->name('show');
     });
 
