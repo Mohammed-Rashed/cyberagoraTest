@@ -108,7 +108,6 @@ Main tables added:
 
 ## Setup Instructions
 
-### 1. Clone the project
 
 ```bash
 git clone https://github.com/Mohammed-Rashed/cyberagoraTest.git
