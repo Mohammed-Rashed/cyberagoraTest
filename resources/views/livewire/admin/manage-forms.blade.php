@@ -67,6 +67,13 @@
                                                 >
                                                     {{ __('Edit') }}
                                                 </a>
+                                                <a
+                                                    href="{{ route('admin.forms.workflow', $form) }}"
+                                                    wire:navigate
+                                                    class="ms-3 text-sm font-medium text-indigo-600 hover:text-indigo-900"
+                                                >
+                                                    {{ __('Workflow') }}
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach

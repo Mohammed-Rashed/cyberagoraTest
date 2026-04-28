@@ -2,6 +2,7 @@
 
 use App\Livewire\Admin\FormBuilder;
 use App\Livewire\Admin\ManageForms;
+use App\Livewire\Admin\WorkflowBuilder;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -20,6 +21,7 @@ Route::middleware(['auth', 'role:admin'])
     ->group(function () {
         Route::get('forms/create', FormBuilder::class)->name('forms.create');
         Route::get('forms/{form}/edit', FormBuilder::class)->name('forms.edit');
+        Route::get('forms/{form}/workflow', WorkflowBuilder::class)->name('forms.workflow');
         Route::get('forms', ManageForms::class)->name('forms.index');
     });
 
