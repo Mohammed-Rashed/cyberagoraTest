@@ -9,6 +9,12 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
+                    @if (session('success'))
+                        <div class="mb-4 rounded-md bg-green-50 p-4 text-sm text-green-800">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
                     @if ($forms->isEmpty())
                         <p class="text-sm text-gray-600">
                             {{ __('No active forms are available right now.') }}
@@ -36,9 +42,19 @@
                                             <td class="px-4 py-3 text-sm text-gray-700">{{ $form->fields_count }}</td>
                                             <td class="px-4 py-3 text-sm text-gray-700">{{ $form->workflow_steps_count }}</td>
                                             <td class="px-4 py-3 text-right">
-                                                <span class="text-sm text-gray-500">
-                                                    {{ __('Submit page coming next') }}
-                                                </span>
+                                                @if ($form->workflow_steps_count > 0 && $form->fields_count > 0)
+                                                    <a
+                                                        href="{{ route('forms.submit', $form) }}"
+                                                        wire:navigate
+                                                        class="text-sm font-medium text-indigo-600 hover:text-indigo-900"
+                                                    >
+                                                        {{ __('Submit') }}
+                                                    </a>
+                                                @else
+                                                    <span class="text-sm text-gray-500">
+                                                        {{ __('Not ready') }}
+                                                    </span>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

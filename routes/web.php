@@ -4,6 +4,7 @@ use App\Livewire\Admin\FormBuilder;
 use App\Livewire\Admin\ManageForms;
 use App\Livewire\Admin\WorkflowBuilder;
 use App\Livewire\User\AvailableForms;
+use App\Livewire\User\SubmitApprovalRequest;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -18,6 +19,7 @@ Route::view('profile', 'profile')
 
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('forms', AvailableForms::class)->name('forms.index');
+    Route::get('forms/{form}/submit', SubmitApprovalRequest::class)->name('forms.submit');
 });
 
 Route::middleware(['auth', 'role:admin'])
