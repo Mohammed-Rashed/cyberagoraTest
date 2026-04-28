@@ -3,6 +3,7 @@
 use App\Livewire\Admin\FormBuilder;
 use App\Livewire\Admin\ManageForms;
 use App\Livewire\Admin\WorkflowBuilder;
+use App\Livewire\Approver\PendingApprovals;
 use App\Livewire\User\AvailableForms;
 use App\Livewire\User\MyApprovalRequests;
 use App\Livewire\User\SubmitApprovalRequest;
@@ -32,6 +33,13 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('forms/{form}/edit', FormBuilder::class)->name('forms.edit');
         Route::get('forms/{form}/workflow', WorkflowBuilder::class)->name('forms.workflow');
         Route::get('forms', ManageForms::class)->name('forms.index');
+    });
+
+Route::middleware(['auth', 'role:approver'])
+    ->prefix('approvals')
+    ->name('approvals.')
+    ->group(function () {
+        Route::get('pending', PendingApprovals::class)->name('pending');
     });
 
 require __DIR__.'/auth.php';

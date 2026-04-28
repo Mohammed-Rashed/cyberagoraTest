@@ -49,6 +49,12 @@ new class extends Component
                             {{ __('My Requests') }}
                         </x-nav-link>
                     @endif
+
+                    @if (auth()->user()->role === \App\Enums\UserRole::Approver)
+                        <x-nav-link :href="route('approvals.pending')" :active="request()->routeIs('approvals.pending')" wire:navigate>
+                            {{ __('Pending Approvals') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -114,6 +120,12 @@ new class extends Component
 
                 <x-responsive-nav-link :href="route('my-requests.index')" :active="request()->routeIs('my-requests.*')" wire:navigate>
                     {{ __('My Requests') }}
+                </x-responsive-nav-link>
+            @endif
+
+            @if (auth()->user()->role === \App\Enums\UserRole::Approver)
+                <x-responsive-nav-link :href="route('approvals.pending')" :active="request()->routeIs('approvals.pending')" wire:navigate>
+                    {{ __('Pending Approvals') }}
                 </x-responsive-nav-link>
             @endif
         </div>
