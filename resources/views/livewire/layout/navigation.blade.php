@@ -38,6 +38,10 @@ new class extends Component
                         <x-nav-link :href="route('admin.forms.index')" :active="request()->routeIs('admin.forms.*')" wire:navigate>
                             {{ __('Admin Forms') }}
                         </x-nav-link>
+
+                        <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')" wire:navigate>
+                            {{ __('Admin Users') }}
+                        </x-nav-link>
                     @endif
 
                     @if (auth()->user()->role === \App\Enums\UserRole::User)
@@ -114,6 +118,10 @@ new class extends Component
             @if (auth()->user()->role === \App\Enums\UserRole::Admin)
                 <x-responsive-nav-link :href="route('admin.forms.index')" :active="request()->routeIs('admin.forms.*')" wire:navigate>
                     {{ __('Admin Forms') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')" wire:navigate>
+                    {{ __('Admin Users') }}
                 </x-responsive-nav-link>
             @endif
 

@@ -2,6 +2,8 @@
 
 use App\Livewire\Admin\FormBuilder;
 use App\Livewire\Admin\ManageForms;
+use App\Livewire\Admin\ManageUsers;
+use App\Livewire\Admin\UserBuilder;
 use App\Livewire\Admin\WorkflowBuilder;
 use App\Livewire\Approver\ApprovalDecision;
 use App\Livewire\Approver\ApprovalHistory;
@@ -31,6 +33,8 @@ Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+        Route::get('users/create', UserBuilder::class)->name('users.create');
+        Route::get('users', ManageUsers::class)->name('users.index');
         Route::get('forms/create', FormBuilder::class)->name('forms.create');
         Route::get('forms/{form}/edit', FormBuilder::class)->name('forms.edit');
         Route::get('forms/{form}/workflow', WorkflowBuilder::class)->name('forms.workflow');
