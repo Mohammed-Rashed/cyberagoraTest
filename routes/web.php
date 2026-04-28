@@ -8,6 +8,7 @@ use App\Livewire\Admin\WorkflowBuilder;
 use App\Livewire\Approver\ApprovalDecision;
 use App\Livewire\Approver\ApprovalHistory;
 use App\Livewire\Approver\PendingApprovals;
+use App\Livewire\User\ApprovalRequestDetails;
 use App\Livewire\User\AvailableForms;
 use App\Livewire\User\MyApprovalRequests;
 use App\Livewire\User\SubmitApprovalRequest;
@@ -27,6 +28,7 @@ Route::middleware(['auth', 'verified', 'active', 'role:user'])->group(function (
     Route::get('forms', AvailableForms::class)->name('forms.index');
     Route::get('forms/{form}/submit', SubmitApprovalRequest::class)->name('forms.submit');
     Route::get('my-requests', MyApprovalRequests::class)->name('my-requests.index');
+    Route::get('my-requests/{approvalRequest}', ApprovalRequestDetails::class)->name('my-requests.show');
 });
 
 Route::middleware(['auth', 'verified', 'active', 'role:admin'])

@@ -22,6 +22,7 @@
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Current Step</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Submitted</th>
+                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
@@ -47,6 +48,15 @@
                                             </td>
                                             <td class="px-4 py-3 text-sm text-gray-700">
                                                 {{ $approvalRequest->submitted_at?->format('Y-m-d H:i') }}
+                                            </td>
+                                            <td class="px-4 py-3 text-right">
+                                                <a
+                                                    href="{{ route('my-requests.show', $approvalRequest) }}"
+                                                    wire:navigate
+                                                    class="text-sm font-medium text-indigo-600 hover:text-indigo-900"
+                                                >
+                                                    {{ __('View') }}
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach

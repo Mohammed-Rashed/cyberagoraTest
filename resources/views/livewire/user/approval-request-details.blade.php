@@ -1,0 +1,130 @@
+<div>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Request Details') }} #{{ $approvalRequest->id }}
+        </h2>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <div class="text-sm font-medium text-gray-500">{{ __('Form') }}</div>
+                            <div class="mt-1 text-sm text-gray-900">{{ $approvalRequest->form?->name ?? __('Deleted form') }}</div>
+                        </div>
+
+                        <div>
+                            <div class="text-sm font-medium text-gray-500">{{ __('Status') }}</div>
+                            <div class="mt-1 text-sm">
+                                <span @class([
+                                    'font-medium',
+                                    'text-yellow-700' => $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Pending,
+                                    'text-green-700' => $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Approved,
+                                    'text-red-700' => $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Rejected,
+                                ])>
+                                    {{ $approvalRequest->status->name }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="text-sm font-medium text-gray-500">{{ __('Current Step') }}</div>
+                            <div class="mt-1 text-sm text-gray-900">
+                                {{ $approvalRequest->status === \App\Enums\ApprovalRequestStatus::Pending ? $approvalRequest->current_step_order : '-' }}
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="text-sm font-medium text-gray-500">{{ __('Submitted') }}</div>
+                            <div class="mt-1 text-sm text-gray-900">{{ $approvalRequest->submitted_at?->format('Y-m-d H:i') }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6">
+                    <h3 class="text-lg font-medium text-gray-900">{{ __('Submitted Values') }}</h3>
+
+                    <div class="mt-4 divide-y divide-gray-200">
+                        @foreach ($approvalRequest->values as $value)
+                            <div class="py-3">
+                                <div class="text-sm font-medium text-gray-700">
+                                    {{ $value->formField?->label ?? __('Deleted field') }}
+                                </div>
+                                <div class="mt-1 text-sm text-gray-900 whitespace-pre-line">
+                                    {{ filled($value->value) ? $value->value : '-' }}
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6">
+                    <h3 class="text-lg font-medium text-gray-900">{{ __('Approval Actions') }}</h3>
+
+                    @if ($approvalRequest->actions->isEmpty())
+                        <p class="mt-4 text-sm text-gray-600">
+                            {{ __('No approval actions have been taken yet.') }}
+                        </p>
+                    @else
+                        <div class="mt-4 overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Step</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Approver</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Comment</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acted At</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    @foreach ($approvalRequest->actions as $action)
+                                        <tr>
+                                            <td class="px-4 py-3 text-sm text-gray-700">
+                                                {{ $action->workflowStep?->step_order ?? '-' }}
+                                            </td>
+                                            <td class="px-4 py-3 text-sm text-gray-700">
+                                                {{ $action->approver?->name ?? '-' }}
+                                            </td>
+                                            <td class="px-4 py-3 text-sm">
+                                                <span @class([
+                                                    'font-medium',
+                                                    'text-green-700' => $action->action === \App\Enums\ApprovalActionType::Approved,
+                                                    'text-red-700' => $action->action === \App\Enums\ApprovalActionType::Rejected,
+                                                ])>
+                                                    {{ $action->action->name }}
+                                                </span>
+                                            </td>
+                                            <td class="px-4 py-3 text-sm text-gray-700">
+                                                {{ filled($action->comment) ? $action->comment : '-' }}
+                                            </td>
+                                            <td class="px-4 py-3 text-sm text-gray-700">
+                                                {{ $action->acted_at?->format('Y-m-d H:i') }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            <div class="flex justify-end">
+                <a
+                    href="{{ route('my-requests.index') }}"
+                    wire:navigate
+                    class="text-sm text-gray-600 hover:text-gray-900"
+                >
+                    {{ __('Back to My Requests') }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
